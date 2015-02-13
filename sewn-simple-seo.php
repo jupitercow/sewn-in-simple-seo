@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -74,7 +74,7 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.0.0';
+		$this->version     = '2.0.2';
 		$this->settings    = array(
 			'add_xml_sitemap'   => false,
 			'post_types'        => array('post','page'),
@@ -228,7 +228,7 @@ class Sewn_Seo
 	 * @since	1.0.3
 	 * @return	void
 	 */
-	public static function wp_head()
+	public function wp_head()
 	{
 		if ( apply_filters( "{$this->prefix}/seo/automate_head", apply_filters( "{$this->plugin_name}/automate_head", true ) ) )
 		{
@@ -248,7 +248,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function wp_title( $title, $sep="|" )
+	public function wp_title( $title, $sep="|" )
 	{
 		if (! $sep && false !== $sep ) {
 			$sep = "|";
@@ -318,7 +318,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_description()
+	public function meta_description()
 	{
 		$post_id = $GLOBALS['post']->ID;
 		$content = '';
@@ -359,7 +359,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_keywords()
+	public function meta_keywords()
 	{
 		$post_id = $GLOBALS['post']->ID;
 		$content = '';
@@ -398,7 +398,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_classification()
+	public function meta_classification()
 	{
 		if ( $meta = get_option('meta_classification') ) {
 			printf( $this->settings['meta_fields']['classification'] . "\n", $meta );
@@ -411,7 +411,7 @@ class Sewn_Seo
 	 * @since	1.0.1
 	 * @return	void
 	 */
-	public static function meta_site_name()
+	public function meta_site_name()
 	{
 		$content = '';
 		if ( $meta = get_option('meta_title') ) {
@@ -431,7 +431,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_og_title()
+	public function meta_og_title()
 	{
 		$post_id = $GLOBALS['post']->ID;
 		$content = '';
@@ -452,7 +452,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_og_image()
+	public function meta_og_image()
 	{
 		$post_id = $GLOBALS['post']->ID;
 		$content = '';
@@ -479,7 +479,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_og_type()
+	public function meta_og_type()
 	{
 		if ( $meta = get_option('meta_type') ) {
 			printf( $this->settings['meta_fields']['type'] . "\n", $meta );
@@ -492,7 +492,7 @@ class Sewn_Seo
 	 * @since	1.0.0
 	 * @return	void
 	 */
-	public static function meta_permalink()
+	public function meta_permalink()
 	{
 		if ( is_home() )
 		{
