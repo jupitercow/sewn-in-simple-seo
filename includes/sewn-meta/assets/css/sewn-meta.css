@@ -1,0 +1,132 @@
+.sewn-hl:before, .sewn-hl:after, .sewn-bl:before, .sewn-bl:after, .sewn-cf:before, .sewn-cf:after {
+	content: "";
+	display: block;
+	line-height: 0;
+}
+
+	.sewn-hl:after, .sewn-bl:after, .sewn-cf:after {
+		clear: both;
+	}
+
+
+.sewn-bl {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	display: block;
+	position: relative;
+}
+
+	.sewn-bl > li {
+		display: block;
+		margin: 0;
+		padding: 0;
+		float: none;
+	}
+
+
+
+.sewn-postbox > .inside, .sewn-fields {
+	margin: 0 !important;
+	padding: 0 !important;
+	position: relative;
+}
+
+.sewn-fields > .sewn-field {
+	margin: 0;
+	padding: 15px 12px;
+	border-top: #EEEEEE solid 1px;
+}
+
+.sewn-fields > .sewn-field:first-child {
+	border-top: none !important;
+}
+
+.sewn-field .sewn-label {
+	vertical-align: top;
+	margin: 0 0 10px;
+}
+
+	.sewn-field .sewn-label label {
+		display: block;
+		font-weight: bold;
+		font-size: 13px;
+		line-height: 1.4em;
+		margin: 0 0 3px;
+	}
+
+	.sewn-field .sewn-label p {
+		color: #777777;
+		display: block;
+		font-size: 12px;
+		line-height: 1.4em;
+		font-style: normal;
+		margin: 3px 0 0 !important;
+		padding: 0 !important;
+	}
+
+
+.sewn-field .sewn-input {
+	vertical-align: top;
+}
+
+	.sewn-input-wrap {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.sewn-field input[type="text"],
+	.sewn-field input[type="password"],
+	.sewn-field input[type="number"],
+	.sewn-field input[type="search"],
+	.sewn-field input[type="email"],
+	.sewn-field input[type="url"],
+	.sewn-field textarea,
+	.sewn-field select {
+		width: 100%;
+		padding: 3px 5px;
+		resize: none;
+		margin: 0;
+		box-sizing: border-box;
+		font-size: 14px;
+		line-height: 15px;
+	}
+
+	.sewn-input-wrap input {
+		height: 28px;
+		margin: 0;
+	}
+
+	ul.sewn-radio-list,
+	ul.sewn-checkbox-list {
+		background: transparent !important;
+		position: relative;
+		padding: 1px;
+		margin: 0;
+	}
+
+		ul.sewn-radio-list li,
+		ul.sewn-checkbox-list li {
+			font-size: 13px;
+			line-height: 22px;
+			margin: 0;
+			position: relative;
+			word-wrap: break-word;
+		}
+
+			ul.sewn-radio-list li label,
+			ul.sewn-checkbox-list li label {
+				display: inline;
+				margin: 2px 0;
+			}
+
+			ul.sewn-radio-list li input,
+			ul.sewn-checkbox-list li input {
+				margin: -1px 4px 0 0;
+				width: auto !important;
+				vertical-align: middle;
+			}
+
+.sewn-meta-extra {
+	font-size: .75em;
+}
