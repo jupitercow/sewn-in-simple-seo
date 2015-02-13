@@ -10,7 +10,8 @@ By default only pages and posts are added, but you can remove either of those an
 /**
  * Add a post type to the XML sitemap
  *
- * Takes the default array('post','page') and adds 'news' and 'event' post types to it. Returns: array('post','page','news','event')
+ * Takes the default array('post','page') and adds 'news' and 'event' post types 
+ * to it. Returns: array('post','page','news','event')
  *
  * @param	array	$post_types	List of post types to be added to the XML Sitemap
  * @return	array	$post_types	Modified list of post types
@@ -30,7 +31,8 @@ function custom_sitemap_post_types( $post_types )
  *
  * This will replace the default completely. Returns: array('news','event')
  *
- * The result is to remove 'post' and 'page' post types and to add 'news' and 'event' post types
+ * The result is to remove 'post' and 'page' post types and to add 'news' and 
+ * 'event' post types
  *
  * @param	array	$post_types	List of post types to be added to the XML Sitemap
  * @return	array	$post_types	Modified list of post types
