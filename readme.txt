@@ -18,11 +18,9 @@ Designed to remove all of the extra stuff that you just won't use. It is made to
 *	Choose which post types it is added to (posts and pages by default)
 *	Integrates nicely with the Sewn In XML Sitemap plugin, so they get merged into one panel for editing
 
-# Sewn In Simple SEO
-
 A nice and simple way to create XML Sitemaps when a page or post is saved. Very simple, no cruft or extra features you won't use.
 
-## Control what post types are added
+= Control what post types are added =
 
 By default only pages and posts are added, but you can remove either of those and/or add more using this filter:
 
@@ -65,7 +63,7 @@ function custom_sitemap_post_types( $post_types )
 }
 `
 
-## Add Keywords
+= Add Keywords =
 
 Use sparingly. Meta keywords can do more harm than help when used incorrectly. Don't overload them. For that reason, we turned it off by default. If you want them, you can turn them back on by adding this to your functions.php.
 
@@ -74,12 +72,12 @@ add_filter( 'sewn/seo/add_keywords', '__return_true' );
 `
 
 
-## Open Graph Images
+= Open Graph Images =
 
 This plugin includes some support for open graph images via the featured image field. Coming soon is a specific upload field.
 
 
-## Automated Header Info
+= Automated Header Info =
 
 Sewn In Simple SEO adds the necessary info to the header, but if you would like to be more deliberate, you can turn that off and the items you want back in manually.
 
@@ -100,7 +98,6 @@ do_action( 'sewn/seo/og:title' );
 do_action( 'sewn/seo/og:image' );
 do_action( 'sewn/seo/og:type' );
 `
-
 
 = Compatibility =
 
@@ -125,9 +122,9 @@ This works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap 
 
 == Changelog ==
 
-## 2.0.0 - 2015-02-12
+= 2.0.0 - 2015-02-12 =
 
-- Added to the repo
+*   Added to the repo
 
 
 == Upgrade Notice ==
