@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.2
+ * Version:           2.0.3
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -74,10 +74,10 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.0.2';
+		$this->version     = '2.0.3';
 		$this->settings    = array(
 			'add_xml_sitemap'   => false,
-			'post_types'        => array('post','page'),
+			'post_types'        => array(''),
 			'meta_fields'       => array(
 				'description'      => '<meta property="og:description" name="description" content="%s">',
 				'keywords'         => '<meta name="keywords" content="%s">',
@@ -119,7 +119,7 @@ class Sewn_Seo
 							'instructions'  => __( 'Used by some social media sites when a user shares this content.', $this->plugin_name ),
 						),
 					),
-					'location'        => array (),
+					'post_types'      => array(),
 					'menu_order'      => 0,
 					'context'         => 'normal',
 					'priority'        => 'low',
@@ -127,17 +127,6 @@ class Sewn_Seo
 				),
 			),
 		);
-
-/** /
-			array (
-				array (
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'page',
-				),
-			),
-/**/
-
 		$this->settings = apply_filters( "{$this->prefix}/seo/settings", $this->settings );
 	}
 
@@ -537,6 +526,13 @@ class Sewn_Seo
 	 */
 	public function register_field_groups()
 	{
+		// locations for this field group
+		if ( $post_types = $this->post_types() ) {
+			foreach ( $post_types as $post_type ) {
+				$this->settings['field_groups'][0]['post_types'][] = $post_type;
+			}
+		}
+
 		// Add sitemap if it is installed and set
 		if ( apply_filters( "{$this->prefix}/seo/add_sitemap", $this->settings['add_xml_sitemap'] ) && class_exists('Sewn_Xml_Sitemap') && $field = apply_filters( "{$this->prefix}/sitemap/exclude_field", '' ) ) {
 			$this->settings['field_groups'][0]['fields'][] = $field;

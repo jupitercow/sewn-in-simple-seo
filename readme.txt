@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacob
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
 Tested up to: 4.1
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,12 +13,12 @@ A very simple SEO interface without caracatures and cruft.
 
 == Description ==
 
-Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
+Adds a fast, simple interface for adding SEO meta data to pags and posts. Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
 
 *	Choose which post types it is added to (posts and pages by default)
-*	Integrates nicely with the Sewn In XML Sitemap plugin, so they get merged into one panel for editing
+*	Integrates nicely with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-sitemap) plugin, so they get merged into one panel for editing
 
-A nice and simple way to create XML Sitemaps when a page or post is saved. Very simple, no cruft or extra features you won't use.
+Very simple, no cruft or extra features you won't use.
 
 = Control what post types are added =
 
@@ -34,7 +34,7 @@ By default only pages and posts are added, but you can remove either of those an
  * @param	array	$post_types	List of post types to be added to the XML Sitemap
  * @return	array	$post_types	Modified list of post types
  */
-add_filter( 'sewn_seo/post_types', 'custom_sitemap_post_types' );
+add_filter( 'sewn/seo/post_types', 'custom_sitemap_post_types' );
 function custom_sitemap_post_types( $post_types )
 {
 	$post_types[] = 'news';
@@ -55,7 +55,7 @@ function custom_sitemap_post_types( $post_types )
  * @param	array	$post_types	List of post types to be added to the XML Sitemap
  * @return	array	$post_types	Modified list of post types
  */
-add_filter( 'sewn_seo/post_types', 'custom_sitemap_post_types' );
+add_filter( 'sewn/seo/post_types', 'custom_sitemap_post_types' );
 function custom_sitemap_post_types( $post_types )
 {
 	$post_types = array('news','event');
@@ -101,7 +101,7 @@ do_action( 'sewn/seo/og:type' );
 
 = Compatibility =
 
-Works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
+Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-sitemap) plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
 
 
 == Installation ==
@@ -121,6 +121,15 @@ Works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap check
 
 
 == Changelog ==
+
+= 2.0.3 - 2015-02-13 =
+
+*   Fixed problem with post_types in new system.
+
+= 2.0.2 - 2015-02-13 =
+
+*   Fixed issues with empty fields.
+*   Corrected some issues with connection to xml sitemap.
 
 = 2.0.1 - 2015-02-13 =
 
