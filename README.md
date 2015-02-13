@@ -6,7 +6,7 @@ A nice and simple way to create XML Sitemaps when a page or post is saved. Very 
 
 By default only pages and posts are added, but you can remove either of those and/or add more using this filter:
 
-`
+```php
 /**
  * Add a post type to the XML sitemap
  *
@@ -22,9 +22,9 @@ function custom_sitemap_post_types( $post_types )
 	$post_types[] = 'event';
 	return $post_types;
 }
-`
+```
 
-`
+```php
 /**
  * Completely replace the post types in the XML sitemap
  *
@@ -41,15 +41,15 @@ function custom_sitemap_post_types( $post_types )
 	$post_types = array('news','event');
 	return $post_types;
 }
-`
+```
 
 ## Add Keywords
 
 Use sparingly. Meta keywords can do more harm than help when used incorrectly. Don't overload them. For that reason, we turned it off by default. If you want them, you can turn them back on by adding this to your functions.php.
 
-`
+```php
 add_filter( 'sewn/seo/add_keywords', '__return_true' );
-`
+```
 
 
 ## Open Graph Images
@@ -63,13 +63,13 @@ Sewn In Simple SEO adds the necessary info to the header, but if you would like 
 
 Turn off the automated fields:
 
-`
+```php
 add_filter( 'sewn/seo/automate_head', '__return_false' );`
-`
+```
 
 The actions that currently get automated in (along with the meta title):
 
-`
+```php
 do_action( 'sewn/seo/description' );
 do_action( 'sewn/seo/keywords' );
 do_action( 'sewn/seo/classification' );
@@ -77,4 +77,4 @@ do_action( 'sewn/seo/site_name' );
 do_action( 'sewn/seo/og:title' );
 do_action( 'sewn/seo/og:image' );
 do_action( 'sewn/seo/og:type' );
-`
+```
