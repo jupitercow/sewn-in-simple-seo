@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacob
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
 Tested up to: 4.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,7 +74,7 @@ add_filter( 'sewn/seo/add_keywords', '__return_true' );
 
 = Open Graph Images =
 
-This plugin includes some support for open graph images via the featured image field. Coming soon is a specific upload field.
+Includes some support for open graph images via the featured image field. Coming soon is a specific upload field.
 
 
 = Automated Header Info =
@@ -101,7 +101,7 @@ do_action( 'sewn/seo/og:type' );
 
 = Compatibility =
 
-This works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
+Works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
 
 
 == Installation ==
@@ -122,9 +122,14 @@ This works with the Sewn In XML Sitemap plugin. When installed, the XML sitemap 
 
 == Changelog ==
 
+= 2.0.1 - 2015-02-13 =
+
+*   Small bugs with empty field arrays.
+*   Issue with XML connection.
+
 = 2.0.0 - 2015-02-12 =
 
-*   Added to the repo
+*   Added to the repo.
 
 
 == Upgrade Notice ==

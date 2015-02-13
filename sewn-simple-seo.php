@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -538,12 +538,14 @@ class Sewn_Seo
 	public function register_field_groups()
 	{
 		// Add sitemap if it is installed and set
-		if ( apply_filters( "{$this->prefix}/seo/add_sitemap", $this->settings['add_xml_sitemap'] ) && class_exists('Sewn_Xml_Sitemap') ) {
-			$this->settings['field_groups'][0]['fields'][] = apply_filters( "{$this->prefix}/sitemap/exclude_field", '' );
+		if ( apply_filters( "{$this->prefix}/seo/add_sitemap", $this->settings['add_xml_sitemap'] ) && class_exists('Sewn_Xml_Sitemap') && $field = apply_filters( "{$this->prefix}/sitemap/exclude_field", '' ) ) {
+			$this->settings['field_groups'][0]['fields'][] = $field;
 		}
 
 		foreach ( $this->settings['field_groups'][0]['fields'] as $key => &$field )
 		{
+			if ( empty($field) ) { continue; }
+
 			// Remove keywords or open graph image field unless asked for
 			if ( ('meta_keywords' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_keywords", false )) || ('meta_image' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_image_field", false )) ) {
 				unset($this->settings['field_groups'][0]['fields'][$key]);
