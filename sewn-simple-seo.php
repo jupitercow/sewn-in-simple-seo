@@ -118,6 +118,12 @@ class Sewn_Seo
 							'type'          => 'image',
 							'instructions'  => __( 'Used by some social media sites when a user shares this content.', $this->plugin_name ),
 						),
+						array(
+							'label'         => __( 'Open Graph Type', $this->plugin_name ),
+							'name'          => 'meta_type',
+							'type'          => 'text',
+							'instructions'  => __( 'Used by some social media sites when a user shares this content.', $this->plugin_name ),
+						),
 					),
 					'post_types'      => array(),
 					'menu_order'      => 0,
@@ -466,8 +472,15 @@ class Sewn_Seo
 	 */
 	public function meta_og_type()
 	{
-		if ( $meta = get_option('meta_type') ) {
-			printf( $this->settings['meta_fields']['type'] . "\n", $meta );
+		$content = '';
+		if (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_type', true) ) {
+			$content = $meta;
+		} elseif ( $meta = get_option('meta_type') ) {
+			$content = $meta;
+		}
+
+		if ( $content ) {
+			printf( $this->settings['meta_fields']['type'] . "\n", $content );
 		}
 	}
 
@@ -539,7 +552,11 @@ class Sewn_Seo
 			if ( empty($field) ) { continue; }
 
 			// Remove keywords or open graph image field unless asked for
-			if ( ('meta_keywords' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_keywords", false )) || ('meta_image' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_image_field", false )) ) {
+			if (
+				('meta_keywords' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_keywords", false )) || 
+				('meta_type' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_type", false )) || 
+				('meta_image' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_image", false )) 
+			) {
 				unset($this->settings['field_groups'][0]['fields'][$key]);
 				continue;
 			}
