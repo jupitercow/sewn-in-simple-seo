@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacob
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
 Tested up to: 4.1
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,11 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Changelog ==
+
+= 2.0.4 - 2015-03-08 =
+
+*   Fixed issues with global post on 404s, etc.
+*   Added support for Open Graph type field.
 
 = 2.0.3 - 2015-02-13 =
 
