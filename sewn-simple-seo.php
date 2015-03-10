@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.4
+ * Version:           2.0.5
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -210,7 +210,7 @@ class Sewn_Seo
 	 */
 	public function admin_enqueue_scripts( $hook )
 	{
-		if ( ! in_array($hook, array('post.php','post-new.php')) || ! in_array($GLOBALS['post_type'], $this->post_types()) ) { return; }
+		if ( ! in_array($hook, array('post.php','post-new.php')) ) { return; } # || ! in_array($GLOBALS['post_type'], $this->post_types())
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/js/sewn-simple-seo-admin.js', array( 'jquery' ), $this->version, false );
 	}

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacob
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
 Tested up to: 4.1
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,10 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Changelog ==
+
+= 2.0.5 - 2015-03-09 =
+
+*   Small update to make sure admin javascript loads.
 
 = 2.0.4 - 2015-03-08 =
 
