@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.5
+ * Version:           2.0.6
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -74,7 +74,7 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.0.3';
+		$this->version     = '2.0.6';
 		$this->settings    = array(
 			'add_xml_sitemap'   => false,
 			'post_types'        => array(''),
@@ -146,6 +146,7 @@ class Sewn_Seo
 	{
 		add_action( 'plugins_loaded', array($this, 'plugins_loaded') );
 		add_action( 'init',           array($this, 'init') );
+		add_action( 'wp_loaded',      array($this, 'register_field_groups') );
 	}
 
 	/**
@@ -177,8 +178,6 @@ class Sewn_Seo
 
 		add_filter( "{$this->prefix}/seo/add_image_field",  array($this, 'manual_image'), 99 );
 
-		$this->register_field_groups();
-
 		add_filter( 'wp_title',                             array($this, 'wp_title'), 99, 2 );
 		add_action( 'wp_head',                              array($this, 'wp_head'), 1 );
 		add_action( "{$this->prefix}/seo/description",      array($this, 'meta_description') );
@@ -199,6 +198,11 @@ class Sewn_Seo
 	 */
 	public function post_types()
 	{
+		$this->settings['post_types'] = get_post_types( array(
+			'public' => true
+		) );
+		unset($this->settings['post_types']['attachment']);
+
 		return apply_filters( "{$this->prefix}/seo/post_types", apply_filters( "{$this->plugin_name}/post_types", $this->settings['post_types'] ) );
 	}
 
@@ -210,7 +214,7 @@ class Sewn_Seo
 	 */
 	public function admin_enqueue_scripts( $hook )
 	{
-		if ( ! in_array($hook, array('post.php','post-new.php')) ) { return; } # || ! in_array($GLOBALS['post_type'], $this->post_types())
+		if ( ! in_array($hook, array('post.php','post-new.php')) || ! in_array($GLOBALS['post_type'], $this->post_types()) ) { return; } # || )
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/js/sewn-simple-seo-admin.js', array( 'jquery' ), $this->version, false );
 	}

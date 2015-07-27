@@ -13,6 +13,8 @@ A very simple SEO interface without caracatures and cruft.
 
 == Description ==
 
+= 2.0.6 changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization. Ther is more info on customization below. =
+
 Adds a fast, simple interface for adding SEO meta data to pags and posts. Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
 
 *	Choose which post types it is added to (posts and pages by default)
@@ -121,6 +123,10 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Changelog ==
+
+= 2.0.6 - 2015-07-27 =
+
+*   Updated the default post types to ALL public post types except 'attachment'.
 
 = 2.0.5 - 2015-03-09 =
 
