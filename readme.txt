@@ -86,7 +86,7 @@ Sewn In Simple SEO adds the necessary info to the header, but if you would like 
 Turn off the automated fields:
 
 `
-add_filter( 'sewn/seo/automate_head', '__return_false' );`
+add_filter( 'sewn/seo/automate_head', '__return_false' );
 `
 
 The actions that currently get automated in (along with the meta title):
@@ -112,7 +112,9 @@ remove_filter( 'sewn/seo/archive_title', 'sewn_simplify_archive_title' );
 = Other filters =
 
 `
-// Custom home or blog page title
+/**
+ * Custom home or blog page title
+ */
 add_filter( 'sewn/seo/home_title', 'custom_seo_home_title' );
 function custom_seo_home_title( $title )
 {
@@ -121,7 +123,9 @@ function custom_seo_home_title( $title )
 `
 
 `
-// Customize 404 titles
+/**
+ * Customize 404 titles
+ */
 add_filter( 'sewn/seo/404_title', 'custom_seo_404_title' );
 function custom_seo_404_title( $title )
 {
@@ -130,7 +134,9 @@ function custom_seo_404_title( $title )
 `
 
 `
-// Customize archive titles
+/**
+ * Customize archive titles
+ */
 add_filter( 'sewn/seo/archive_title', 'custom_seo_archive_title' );
 function custom_seo_archive_title( $title )
 {
@@ -139,7 +145,9 @@ function custom_seo_archive_title( $title )
 `
 
 `
-// Custom archive descriptions
+/**
+ * Custom archive descriptions
+ */
 add_filter( 'sewn/seo/archive_description', 'custom_seo_archive_description' );
 function custom_seo_archive_description( $description )
 {
@@ -148,12 +156,9 @@ function custom_seo_archive_description( $description )
 `
 
 `
-// Turn on keywords field, use at your own risk...
-add_filter( 'sewn/seo/add_keywords', '__return_true' );
-`
-
-`
-// Turn on open graph type field
+/**
+ * Turn on open graph type field
+ */
 add_filter( 'sewn/seo/add_type', '__return_true' );
 `
 

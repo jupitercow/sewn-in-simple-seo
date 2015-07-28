@@ -128,11 +128,6 @@ function custom_seo_archive_description( $description )
 ```
 
 ```php
-// Turn on keywords field, use at your own risk...
-add_filter( 'sewn/seo/add_keywords', '__return_true' );
-```
-
-```php
 // Turn on open graph type field
 add_filter( 'sewn/seo/add_type', '__return_true' );
 ```
