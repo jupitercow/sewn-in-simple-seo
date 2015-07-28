@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.6
+ * Version:           2.0.7
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 $class_name = 'Sewn_Seo';
-if (! class_exists($class_name) ) :
+if ( ! class_exists($class_name) ) :
 
 class Sewn_Seo
 {
@@ -74,7 +74,7 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.0.6';
+		$this->version     = '2.0.7';
 		$this->settings    = array(
 			'add_xml_sitemap'   => false,
 			'post_types'        => array(''),
@@ -144,9 +144,10 @@ class Sewn_Seo
 	 */
 	public function run()
 	{
-		add_action( 'plugins_loaded', array($this, 'plugins_loaded') );
-		add_action( 'init',           array($this, 'init') );
-		add_action( 'wp_loaded',      array($this, 'register_field_groups') );
+		add_action( 'plugins_loaded',         array($this, 'plugins_loaded') );
+		add_action( 'init',                   array($this, 'init') );
+		add_action( 'wp_loaded',              array($this, 'register_field_groups') );
+		add_filter( 'sewn/seo/archive_title', 'sewn_simplify_archive_title' );
 	}
 
 	/**
@@ -249,7 +250,7 @@ class Sewn_Seo
 	 */
 	public function wp_title( $title, $sep="|" )
 	{
-		if (! $sep && false !== $sep ) {
+		if ( ! $sep && false !== $sep ) {
 			$sep = "|";
 		}
 
@@ -258,50 +259,7 @@ class Sewn_Seo
 			return $title;
 		}
 
-		$content = '';
-
-		global $post, $paged, $page;
-
-		if ( is_404() )
-		{
-			$content = apply_filters( "{$this->prefix}/seo/404_title", "Not Found, Error 404" );
-		}
-		elseif ( is_home() )
-		{
-			$posts_page_id = get_option('page_for_posts');
-			$front_page_id = get_option('page_on_front');
-
-			// If pages are default with home being posts and a site meta exists
-			if (! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_title') ) {
-				$content = $meta;
-			// Look for a custom meta on a posts page
-			} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_title', true) ) {
-				$content = $meta;
-			// Look for a posts page title
-			} elseif ( $posts_page_id && $meta = get_the_title($posts_page_id) ) {
-				$content = "$meta $sep " . get_bloginfo('blogname');
-			// Use a default that can be filtered
-			} else {
-				$content = apply_filters( "{$this->prefix}/seo/home_title", get_bloginfo('blogname') );
-			}
-		}
-		else
-		{
-			// Look for a custom meta title and override post title
-			if (! empty($GLOBALS['post']->ID) )
-			{
-				if ( $meta_title = get_post_meta($GLOBALS['post']->ID, 'meta_title', true) ) {
-					$content = $meta_title;
-				} elseif ( $meta_title = get_the_title($GLOBALS['post']->ID) ) {
-					$content = "$meta_title $sep " . get_bloginfo('blogname');
-				}
-			}
-		}
-
-		// Add pagination
-		if ( 1 < $GLOBALS['paged'] || 1 < $GLOBALS['page'] ) {
-			$content .= " $sep Page " . max( $GLOBALS['paged'], $GLOBALS['page'] );
-		}
+		$content = $this->seo_title( $sep );
 
 		// Add the site name
 		if ( $content ) {
@@ -310,6 +268,72 @@ class Sewn_Seo
 
 		return trim($title);
 	}
+
+	/**
+	 * Better SEO: meta title.
+	 *
+	 * @since	2.0.7
+	 * @return	void
+	 */
+	public function seo_title( $sep="|" )
+	{
+		if ( ',' != $sep ) { $sep = " $sep"; }
+		$content = '';
+
+		global $post, $paged, $page;
+
+		if ( is_404() )
+		{
+			$content = apply_filters( "{$this->prefix}/seo/404_title", "Not Found, Error 404" );
+		}
+		elseif ( is_archive() )
+		{
+			$content = apply_filters( "{$this->prefix}/seo/archive_title", get_the_archive_title() . "$sep " . get_bloginfo('blogname') );
+		}
+		elseif ( is_home() )
+		{
+			$posts_page_id = get_option('page_for_posts');
+			$front_page_id = get_option('page_on_front');
+
+			// If pages are default with home being posts and a site meta exists
+			if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_title') ) {
+				$content = $meta;
+			// Look for a custom meta on a posts page
+			} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_title', true) ) {
+				$content = $meta;
+			// Look for a posts page title
+			} elseif ( $posts_page_id && $meta = get_the_title($posts_page_id) ) {
+				$content = "$meta$sep " . get_bloginfo('blogname');
+			// Use a default that can be filtered
+			} else {
+				$content = apply_filters( "{$this->prefix}/seo/home_title", get_bloginfo('blogname') );
+			}
+		}
+		else
+		{
+			// Look for a custom meta title and override post title
+			if ( ! empty($GLOBALS['post']->ID) )
+			{
+				if ( $meta_title = get_post_meta($GLOBALS['post']->ID, 'meta_title', true) ) {
+					$content = $meta_title;
+				} elseif ( $meta_title = get_the_title($GLOBALS['post']->ID) ) {
+					$content = "$meta_title$sep " . get_bloginfo('blogname');
+				}
+			}
+		}
+
+		// Add pagination
+		if ( $content && (1 < $GLOBALS['paged'] || 1 < $GLOBALS['page']) ) {
+			$content .= "$sep Page " . max( $GLOBALS['paged'], $GLOBALS['page'] );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Update archive titles in HEAD
+	 * /
+	public 
 
 	/**
 	 * Better SEO: meta description.
@@ -321,13 +345,17 @@ class Sewn_Seo
 	{
 		$content = '';
 
-		if ( is_home() )
+		if ( is_archive() )
+		{
+			$content = apply_filters( "{$this->prefix}/seo/archive_description", strip_tags( str_replace(array("\r","\n"), '', term_description()) ) );
+		}
+		elseif ( is_home() )
 		{
 			$posts_page_id = get_option('page_for_posts');
 			$front_page_id = get_option('page_on_front');
 
 			// If pages are default with home being posts and a site meta exists
-			if (! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_description') ) {
+			if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_description') ) {
 				$content = $meta;
 			// Look for a custom meta on a posts page
 			} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_description', true) ) {
@@ -339,9 +367,9 @@ class Sewn_Seo
 		}
 		else
 		{
-			if (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_description', true) ) {
+			if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_description', true) ) {
 				$content = $meta;
-			} elseif (! empty($GLOBALS['post']->ID) && $meta = get_post_field('post_content', $GLOBALS['post']->ID) ) {
+			} elseif ( ! empty($GLOBALS['post']->ID) && $meta = get_post_field('post_content', $GLOBALS['post']->ID) ) {
 				$content = wp_trim_words($meta, '30', '');
 			}
 		}
@@ -369,7 +397,7 @@ class Sewn_Seo
 				$front_page_id = get_option('page_on_front');
 	
 				// If pages are default with home being posts and a site meta exists
-				if (! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_keywords') ) {
+				if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_keywords') ) {
 					$content = $meta;
 				// Look for a custom meta on a posts page
 				} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_keywords', true) ) {
@@ -378,7 +406,7 @@ class Sewn_Seo
 			}
 			else
 			{
-				if (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_keywords', true) ) {
+				if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_keywords', true) ) {
 					$content = $meta;
 				}
 			}
@@ -430,12 +458,7 @@ class Sewn_Seo
 	 */
 	public function meta_og_title()
 	{
-		$content = '';
-		if (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_title', true) ) {
-			$content = $meta;
-		} else {
-			$content = get_the_title();
-		}
+		$content = $this->seo_title( ',' );
 
 		if ( $content ) {
 			printf( $this->settings['meta_fields']['title'] . "\n", $content );
@@ -453,12 +476,12 @@ class Sewn_Seo
 		$content = '';
 		if ( is_home() && $meta = get_option('meta_image') ) {
 			$content = $meta;
-		} elseif (! empty($GLOBALS['post']->ID) && $meta = apply_filters( "{$this->prefix}/seo/add_image_field", $GLOBALS['post']->ID ) ) {
+		} elseif ( ! empty($GLOBALS['post']->ID) && $meta = apply_filters( "{$this->prefix}/seo/add_image_field", $GLOBALS['post']->ID ) ) {
 			$content = $meta;
-		} elseif (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_image', true) ) {
+		} elseif ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_image', true) ) {
 			$content = $meta;
-		} elseif (! empty($GLOBALS['post']->ID) && $meta_array = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['post']->ID), 'full') ) {
-			if (! empty($meta_array[0]) ) {
+		} elseif ( ! empty($GLOBALS['post']->ID) && $meta_array = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['post']->ID), 'full') ) {
+			if ( ! empty($meta_array[0]) ) {
 				$content = $meta_array[0];
 			}
 		}
@@ -477,7 +500,7 @@ class Sewn_Seo
 	public function meta_og_type()
 	{
 		$content = '';
-		if (! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_type', true) ) {
+		if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_type', true) ) {
 			$content = $meta;
 		} elseif ( $meta = get_option('meta_type') ) {
 			$content = $meta;
@@ -566,7 +589,7 @@ class Sewn_Seo
 			}
 
 			// Add max length to instructions
-			if (! empty($field['maxlength']) ) {
+			if ( ! empty($field['maxlength']) ) {
 				$field['instructions'] = sprintf( $field['instructions'], $field['maxlength'] );
 			}
 		}
@@ -580,5 +603,16 @@ class Sewn_Seo
 $$class_name = new $class_name;
 $$class_name->run();
 unset($class_name);
+
+function sewn_simplify_archive_title( $title )
+{
+	$delimiter = ': ';
+	$array     = explode( $delimiter, $title );
+	if ( 1 < count($array) ) {
+		array_shift($array);
+		return implode( $delimiter, $array );
+	}
+	return $title;
+}
 
 endif;

@@ -66,7 +66,7 @@ Sewn In Simple SEO adds the necessary info to the header, but if you would like 
 Turn off the automated fields:
 
 ```php
-add_filter( 'sewn/seo/automate_head', '__return_false' );`
+add_filter( 'sewn/seo/automate_head', '__return_false' );
 ```
 
 The actions that currently get automated in (along with the meta title):
@@ -79,4 +79,60 @@ do_action( 'sewn/seo/site_name' );
 do_action( 'sewn/seo/og:title' );
 do_action( 'sewn/seo/og:image' );
 do_action( 'sewn/seo/og:type' );
+```
+
+= More complete / complex archive titles =
+
+Currently the default archive titles are set to be simplified. Generally this will lead to better SEO titles. Where as a standard WordPress archive title might be "Category: Category Name" or "Author: Author Name", these would be simplified to "Category Name" and "Author Name". If you prefer the original version, you can turn off the simplification:
+
+```php
+remove_filter( 'sewn/seo/archive_title', 'sewn_simplify_archive_title' );
+```
+
+= Other filters =
+
+```php
+// Custom home or blog page title
+add_filter( 'sewn/seo/home_title', 'custom_seo_home_title' );
+function custom_seo_home_title( $title )
+{
+	return 'My blog page title';
+}
+```
+
+```php
+// Customize 404 titles
+add_filter( 'sewn/seo/404_title', 'custom_seo_404_title' );
+function custom_seo_404_title( $title )
+{
+	return 'These are not the pages you are looking for';
+}
+`
+
+```php
+// Customize archive titles
+add_filter( 'sewn/seo/archive_title', 'custom_seo_archive_title' );
+function custom_seo_archive_title( $title )
+{
+	// Customize the title
+}
+```
+
+```php
+// Custom archive descriptions
+add_filter( 'sewn/seo/archive_description', 'custom_seo_archive_description' );
+function custom_seo_archive_description( $description )
+{
+	// Custom description here
+}
+```
+
+```php
+// Turn on keywords field, use at your own risk...
+add_filter( 'sewn/seo/add_keywords', '__return_true' );
+```
+
+```php
+// Turn on open graph type field
+add_filter( 'sewn/seo/add_type', '__return_true' );
 ```

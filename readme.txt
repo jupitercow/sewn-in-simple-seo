@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacob
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
 Tested up to: 4.2.3
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ A very simple SEO interface without caracatures and cruft.
 
 == Description ==
 
-= 2.0.6 changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization. Ther is more info on customization below. =
+= 2.0.6 changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization. There is more info on customization below. =
 
 Adds a fast, simple interface for adding SEO meta data to pags and posts. Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
 
@@ -101,6 +101,62 @@ do_action( 'sewn/seo/og:image' );
 do_action( 'sewn/seo/og:type' );
 `
 
+= More complete / complex archive titles =
+
+Currently the default archive titles are set to be simplified. Generally this will lead to better SEO titles. Where as a standard WordPress archive title might be "Category: Category Name" or "Author: Author Name", these would be simplified to "Category Name" and "Author Name". If you prefer the original version, you can turn off the simplification:
+
+`
+remove_filter( 'sewn/seo/archive_title', 'sewn_simplify_archive_title' );
+`
+
+= Other filters =
+
+`
+// Custom home or blog page title
+add_filter( 'sewn/seo/home_title', 'custom_seo_home_title' );
+function custom_seo_home_title( $title )
+{
+	return 'My blog page title';
+}
+`
+
+`
+// Customize 404 titles
+add_filter( 'sewn/seo/404_title', 'custom_seo_404_title' );
+function custom_seo_404_title( $title )
+{
+	return 'These are not the pages you are looking for';
+}
+`
+
+`
+// Customize archive titles
+add_filter( 'sewn/seo/archive_title', 'custom_seo_archive_title' );
+function custom_seo_archive_title( $title )
+{
+	// Customize the title
+}
+`
+
+`
+// Custom archive descriptions
+add_filter( 'sewn/seo/archive_description', 'custom_seo_archive_description' );
+function custom_seo_archive_description( $description )
+{
+	// Custom description here
+}
+`
+
+`
+// Turn on keywords field, use at your own risk...
+add_filter( 'sewn/seo/add_keywords', '__return_true' );
+`
+
+`
+// Turn on open graph type field
+add_filter( 'sewn/seo/add_type', '__return_true' );
+`
+
 = Compatibility =
 
 Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-sitemap) plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
@@ -119,10 +175,14 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 == Screenshots ==
 
-1. The checkbox to remove posts in the backend.
+1. The SEO panel added to posts.
 
 
 == Changelog ==
+
+= 2.0.7 - 2015-07-27 =
+
+*   Updated the archive default seo titles and descriptions.
 
 = 2.0.6 - 2015-07-27 =
 
@@ -157,6 +217,12 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Upgrade Notice ==
+
+= 2.0.7 =
+Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
+
+= 2.0.6 =
+Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
 
 = 2.0.0 =
 This is the first version in the Wordpress repository.
