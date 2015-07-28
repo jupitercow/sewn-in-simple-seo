@@ -224,7 +224,7 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 == Upgrade Notice ==
 
 = 2.0.7 =
-Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
+Fixed the archive/taxonomy titles. Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
 
 = 2.0.6 =
 Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
