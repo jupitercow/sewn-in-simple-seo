@@ -3,8 +3,8 @@ Contributors: jcow, ekaj
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacobsnyder%40gmail%2ecom&lc=US&item_name=Jacob%20Snyder&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
-Tested up to: 4.2.3
-Stable tag: 2.0.7
+Tested up to: 4.3.1
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,8 +12,6 @@ A very simple SEO interface without caracatures and cruft.
 
 
 == Description ==
-
-= 2.0.6 changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization. There is more info on customization below. =
 
 Adds a fast, simple interface for adding SEO meta data to pags and posts. Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
 
@@ -73,6 +71,13 @@ Use sparingly. Meta keywords can do more harm than help when used incorrectly. D
 add_filter( 'sewn/seo/add_keywords', '__return_true' );
 `
 
+= Turn on Auto-Generated Descriptions =
+
+We don't recommend this. The meta description should be used as a way to craft what the search engines show, otherwise, let the search engines auto generate the descriptions. It doesn't really have a significant impact on visibility and may hinder visibility by keeping the search engine from digging as deep into the rest of the page. Bad descriptions may do harm, and likely don't do any good.
+
+`
+add_filter( 'sewn/seo/default_description', '__return_true' );
+`
 
 = Open Graph Images =
 
@@ -184,6 +189,10 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Changelog ==
+
+= 2.0.8 - 2015-10-15 =
+
+*   Descriptions are no longer auto created. Only crafted descriptions are used. Can be turned back on using this filter: 'sewn/seo/default_description'
 
 = 2.0.7 - 2015-07-27 =
 

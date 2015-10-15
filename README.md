@@ -53,6 +53,14 @@ Use sparingly. Meta keywords can do more harm than help when used incorrectly. D
 add_filter( 'sewn/seo/add_keywords', '__return_true' );
 ```
 
+## Turn on Auto-Generated Descriptions
+
+We don't recommend this. The meta description should be used as a way to craft what the search engines show, otherwise, let the search engines auto generate the descriptions. It doesn't really have a significant impact on visibility and may hinder visibility by keeping the search engine from digging as deep into the rest of the page. Bad descriptions may do harm, and likely don't do any good.
+
+```php
+add_filter( 'sewn/seo/default_description', '__return_true' );
+```
+
 
 ## Open Graph Images
 

@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.7
+ * Version:           2.0.8
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -286,6 +286,11 @@ class Sewn_Seo
 		{
 			$content = apply_filters( "{$this->prefix}/seo/404_title", "Not Found, Error 404" );
 		}
+		elseif ( is_author() )
+		{
+			$author = get_userdata( get_query_var('author') );
+			$content = apply_filters( "{$this->prefix}/seo/author_title", $author->display_name . "$sep " . get_bloginfo('blogname') );
+		}
 		elseif ( is_archive() )
 		{
 			$content = apply_filters( "{$this->prefix}/seo/archive_title", get_the_archive_title() . "$sep " . get_bloginfo('blogname') );
@@ -362,7 +367,7 @@ class Sewn_Seo
 				$content = $meta;
 			// Look for a posts page content
 			} elseif ( $posts_page_id && $meta = get_post_field('post_content', $posts_page_id) ) {
-				$content = wp_trim_words($meta, '30', '');
+				$content = ( apply_filters("{$this->prefix}/seo/default_description", false) ) ? wp_trim_words($meta, '30', '') : null;
 			}
 		}
 		else
@@ -370,7 +375,7 @@ class Sewn_Seo
 			if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_description', true) ) {
 				$content = $meta;
 			} elseif ( ! empty($GLOBALS['post']->ID) && $meta = get_post_field('post_content', $GLOBALS['post']->ID) ) {
-				$content = wp_trim_words($meta, '30', '');
+				$content = ( apply_filters("{$this->prefix}/seo/default_description", false) ) ? wp_trim_words($meta, '30', '') : null;
 			}
 		}
 
