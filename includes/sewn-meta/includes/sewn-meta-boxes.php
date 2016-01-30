@@ -210,35 +210,34 @@ class Sewn_Meta_Box
 	public function save_boxes( $post_id )
 	{
 		// Checks save status
-		$is_autosave = wp_is_post_autosave( $post_id );
-		$is_revision = wp_is_post_revision( $post_id );
+		$is_autosave    = wp_is_post_autosave( $post_id );
+		$is_revision    = wp_is_post_revision( $post_id );
+		if ( $is_autosave || $is_revision ) { return; }
 
-		if ( empty($_POST["{$this->prefix}_nonce"]) ) {
-			$is_valid_nonce = false;
-		} else {
-			foreach ( $_POST["{$this->prefix}_nonce"] as $k => $v ) {
-				$is_valid_nonce = ( wp_verify_nonce($v, $this->settings['nonce']['action'] . "_{$k}") ) ? 'true' : 'false';
-				$group_id = $k;
-			}
-		}
-
-		// Exits script depending on save status
-		if ( $is_autosave || $is_revision || ! $is_valid_nonce || empty($_POST[$this->prefix]) ) {
-			return;
-		}
-
-		if ( ! empty($this->boxes[$group_id]) )
+		if ( ! empty($_POST["{$this->prefix}_nonce"]) )
 		{
-			$field_group = $this->boxes[$group_id];
-			foreach ( $field_group['fields'] as $field )
+			foreach ( $_POST["{$this->prefix}_nonce"] as $group_id => $nonce_value )
 			{
-				$name  = $field['name'];
-				$value = ( ! empty($_POST[$this->prefix][$name]) ) ? $_POST[$this->prefix][$name] : false;
+				// Exits script if nonce is not valid
+				$is_valid_nonce = ( wp_verify_nonce($nonce_value, $this->settings['nonce']['action'] . "_{$group_id}") ) ? 'true' : 'false';
+				if ( ! $is_valid_nonce ) { return; }
 
-				do_action( "{$this->prefix}/meta/update_field", $post_id, $name, $field_group, $value );
+				// Make sure the box is registered
+				if ( ! empty($this->boxes[$group_id]) )
+				{
+					$field_group = $this->boxes[$group_id];
+					foreach ( $field_group['fields'] as $field )
+					{
+						$name  = $field['name'];
+						$value = ( ! empty($_POST[$this->prefix][$name]) ) ? $_POST[$this->prefix][$name] : false;
+
+						do_action( "{$this->prefix}/meta/update_field", $post_id, $name, $field_group, $value );
+					}
+				}
 			}
 		}
 	}
+
 }
 
 endif;

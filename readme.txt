@@ -3,8 +3,8 @@ Contributors: jcow, ekaj
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jacobsnyder%40gmail%2ecom&lc=US&item_name=Jacob%20Snyder&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: seo,search engine,meta data
 Requires at least: 3.6.1
-Tested up to: 4.4
-Stable tag: 2.0.8
+Tested up to: 4.4.1
+Stable tag: 2.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ A very simple SEO interface without caracatures and cruft.
 Adds a fast, simple interface for adding SEO meta data to pags and posts. Designed to remove all of the extra stuff that you just won't use. It is made to be straight forward for users with not confusing extras and no annoying ads. So you can enjoy using it and feel comfortable putting it before a client.
 
 *	Choose which post types it is added to (posts and pages by default)
-*	Integrates nicely with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-sitemap) plugin, so they get merged into one panel for editing
+*	Integrates nicely with the [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-sitemap/) plugin, so they get merged into one panel for editing
 
 Very simple, no cruft or extra features you won't use.
 
@@ -169,7 +169,7 @@ add_filter( 'sewn/seo/add_type', '__return_true' );
 
 = Compatibility =
 
-Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-sitemap) plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
+Works with the [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-sitemap/) plugin. When installed, the XML sitemap checkbox integrates with the SEO fields. The goal is to keep things very simple and integrated.
 
 
 == Installation ==
@@ -189,6 +189,10 @@ Works with the [Sewn In XML Sitemap](https://github.com/jupitercow/sewn-in-xml-s
 
 
 == Changelog ==
+
+= 2.0.9 - 2016-01-29 =
+
+*   Updated sewn meta and readme.
 
 = 2.0.8 - 2015-10-15 =
 

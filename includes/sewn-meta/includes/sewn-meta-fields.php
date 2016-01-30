@@ -89,6 +89,8 @@ class Sewn_Meta_Field
 	 */
 	public function add_field( $field, $field_group )
 	{
+		if (! $field ) { return; }
+
 		$group_id = false;
 		if ( is_array($field_group) && ! empty($field_group['id']) ) {
 			$group_id = $field_group['id'];
