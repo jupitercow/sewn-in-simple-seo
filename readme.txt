@@ -121,6 +121,7 @@ Works with the [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-s
 == Screenshots ==
 
 1. The SEO panel added to posts.
+1. The SEO panel, Advanced tab.
 1. The SEO panel with [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-sitemap/) & [Sewn In Simple Social Optimization](https://wordpress.org/plugins/sewn-in-simple-social/) installed.
 
 
