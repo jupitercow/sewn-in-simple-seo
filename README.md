@@ -40,7 +40,7 @@ add_filter( 'sewn/seo/default_description', '__return_true' );
 ```
 
 
-= Other filters =
+## Other filters
 
 ```php
 // Custom home or blog page title
