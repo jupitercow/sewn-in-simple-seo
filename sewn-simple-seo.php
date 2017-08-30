@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.0.9
+ * Version:           2.1.2
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -74,24 +74,23 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.0.7';
+		$this->version     = '2.1.2';
+		$this->frontend    = array();
 		$this->settings    = array(
-			'add_xml_sitemap'   => false,
-			'post_types'        => array(''),
-			'meta_fields'       => array(
-				'description'      => '<meta property="og:description" name="description" content="%s">',
-				'keywords'         => '<meta name="keywords" content="%s">',
-				'classification'   => '<meta property="og:classification" content="%s">',
-				'site_name'        => '<meta property="og:site_name" name="copyright" content="%s">',
-				'title'            => '<meta property="og:title" content="%s">',
-				'image'            => '<meta property="og:image" content="%s">',
-				'type'             => '<meta property="og:type" content="%s">',
-			),
-			'field_groups'      => array (
+			'add_xml_sitemap'  => false,
+			'add_social'       => false,
+			'post_types'       => array(''),
+			'field_groups'     => array (
 				array(
 					'id'              => $this->plugin_name,
 					'title'           => __( 'SEO', $this->plugin_name ),
 					'fields'          => array (
+						array(
+							'label'         => __( 'Content', $this->plugin_name ),
+							'name'          => 'content',
+							'type'          => 'tab',
+							'placement'     => 'top',
+						),
 						array(
 							'label'         => __( 'Title', $this->plugin_name ),
 							'name'          => 'meta_title',
@@ -112,17 +111,54 @@ class Sewn_Seo
 							'type'          => 'text',
 							'instructions'  => __( 'Use sparingly. This field can be harmful if you overload it.', $this->plugin_name ),
 						),
-						array(
-							'label'         => __( 'Open Graph Image', $this->plugin_name ),
-							'name'          => 'meta_image',
-							'type'          => 'image',
-							'instructions'  => __( 'Used by some social media sites when a user shares this content.', $this->plugin_name ),
+						array (
+							'label'         => __( 'Advanced', $this->plugin_name ),
+							'name'          => 'advanced',
+							'type'          => 'tab',
+							'placement'     => 'top',
 						),
 						array(
-							'label'         => __( 'Open Graph Type', $this->plugin_name ),
-							'name'          => 'meta_type',
+							'label'         => __( 'Meta Robots Index', $this->plugin_name ),
+							'name'          => 'meta_robots_index',
+							'type'          => 'radio',
+							'layout'        => 'horizontal',
+							'instructions'  => __( '', $this->plugin_name ),
+							'choices'       => array(
+								'index',
+								'noindex',
+							),
+						),
+						array(
+							'label'         => __( 'Meta Robots Follow', $this->plugin_name ),
+							'name'          => 'meta_robots_follow',
+							'type'          => 'radio',
+							'layout'        => 'horizontal',
+							'instructions'  => __( '', $this->plugin_name ),
+							'choices'       => array(
+								'follow',
+								'nofollow',
+							),
+						),
+						array(
+							'label'         => __( 'Meta Robots Advanced', $this->plugin_name ),
+							'name'          => 'meta_robots_advanced',
+							'type'          => 'select',
+							'layout'        => 'horizontal',
+							'instructions'  => __( '', $this->plugin_name ),
+							'choices'       => array(
+								'noodp' => 'noodp',
+								'noimageindex' => 'noimageindex',
+								'noarchive' => 'noarchive',
+								'nosnippet' => 'nosnippet',
+							),
+							'multiple' => 1,
+							'ui' => 1,
+						),
+						array(
+							'label'         => __( 'Canonical URL', $this->plugin_name ),
+							'name'          => 'meta_canonical',
 							'type'          => 'text',
-							'instructions'  => __( 'Used by some social media sites when a user shares this content.', $this->plugin_name ),
+							'instructions'  => __( 'Override the default permalink.', $this->plugin_name ),
 						),
 					),
 					'post_types'      => array(),
@@ -158,12 +194,36 @@ class Sewn_Seo
 	 */
 	public function plugins_loaded()
 	{
+		// If XML Sitemap is being used, combine it
 		if ( class_exists('Sewn_Xml_Sitemap') ) {
 			$this->settings['add_xml_sitemap'] = true;
 		}
 
+		// If Social plugin is being used, combine it
+		if ( class_exists('Sewn_Social') ) {
+			$this->settings['add_social'] = true;
+		}
+
+		// Load the Meta Box/Fields generator
 		if ( ! class_exists('Sewn_Meta') ) {
 			require_once plugin_dir_path( __FILE__ ) . 'includes/sewn-meta/sewn-meta.php';
+		}
+
+		// Load Frontend Base
+		if ( ! class_exists('Sewn_Seo_Frontend') ) {
+			require_once plugin_dir_path( __FILE__ ) . 'includes/class-frontend.php';
+		}
+
+		// Load Frontend Classes
+		$frontend_classes = array(
+			'seo'    => 'Sewn_Seo_Frontend_Seo',
+			'social' => 'Sewn_Seo_Frontend_Social',
+		);
+		foreach ( $frontend_classes as $key => $classname ) {
+			if ( ! class_exists($classname) ) {
+				require_once plugin_dir_path( __FILE__ ) . "includes/class-frontend-$key.php";
+				$this->frontend[$classname] = new $classname;
+			}
 		}
 	}
 
@@ -175,20 +235,45 @@ class Sewn_Seo
 	 */
 	public function init()
 	{
-		add_action( 'admin_enqueue_scripts',                array($this, 'admin_enqueue_scripts') );
+		add_action( 'admin_enqueue_scripts',                   array($this, 'admin_enqueue_scripts') );
 
-		add_filter( "{$this->prefix}/seo/add_image_field",  array($this, 'manual_image'), 99 );
+		/* WordPress head */
+		add_action( 'wp_head',                                 array($this, 'wp_head'), 1 );
 
-		add_filter( 'wp_title',                             array($this, 'wp_title'), 99, 2 );
-		add_action( 'wp_head',                              array($this, 'wp_head'), 1 );
-		add_action( "{$this->prefix}/seo/description",      array($this, 'meta_description') );
-		add_action( "{$this->prefix}/seo/keywords",         array($this, 'meta_keywords') );
-		add_action( "{$this->prefix}/seo/classification",   array($this, 'meta_classification') );
-		add_action( "{$this->prefix}/seo/site_name",        array($this, 'meta_site_name') );
-		add_action( "{$this->prefix}/seo/og:title",         array($this, 'meta_og_title') );
-		add_action( "{$this->prefix}/seo/og:image",         array($this, 'meta_og_image') );
-		add_action( "{$this->prefix}/seo/og:type",          array($this, 'meta_og_type') );
-		add_action( "{$this->prefix}/seo/permalink",        array($this, 'meta_permalink') );
+		if ( $this->frontend ) {
+			foreach( $this->frontend as $class ) {
+				$class->init();
+			}
+		}
+	}
+
+	/**
+	 * wp_head
+	 *
+	 * If automate is turned on (default), automate the header fields.
+	 *
+	 * @since	1.0.3
+	 * @return	void
+	 */
+	public function wp_head()
+	{
+		if ( apply_filters( "{$this->prefix}/seo/automate_head", apply_filters( "{$this->plugin_name}/automate_head", true ) ) ) {
+			global $wp_query;
+			$old_wp_query = null;
+
+			if ( ! $wp_query->is_main_query() ) {
+				$old_wp_query = $wp_query;
+				wp_reset_query();
+			}
+
+			do_action( "{$this->prefix}/seo/head" );
+
+			if ( ! empty( $old_wp_query ) ) {
+				$GLOBALS['wp_query'] = $old_wp_query;
+				unset( $old_wp_query );
+			}
+			return;
+		}
 	}
 
 	/**
@@ -200,8 +285,8 @@ class Sewn_Seo
 	public function post_types()
 	{
 		$this->settings['post_types'] = get_post_types( array(
-			'public' => true
-		) );
+			'public' => true,
+		));
 		unset($this->settings['post_types']['attachment']);
 
 		return apply_filters( "{$this->prefix}/seo/post_types", apply_filters( "{$this->plugin_name}/post_types", $this->settings['post_types'] ) );
@@ -221,345 +306,6 @@ class Sewn_Seo
 	}
 
 	/**
-	 * wp_head
-	 *
-	 * If automate is turned on, automate the header items.
-	 *
-	 * @since	1.0.3
-	 * @return	void
-	 */
-	public function wp_head()
-	{
-		if ( apply_filters( "{$this->prefix}/seo/automate_head", apply_filters( "{$this->plugin_name}/automate_head", true ) ) )
-		{
-			do_action( "{$this->prefix}/seo/description" );
-			do_action( "{$this->prefix}/seo/keywords" );
-			do_action( "{$this->prefix}/seo/classification" );
-			do_action( "{$this->prefix}/seo/site_name" );
-			do_action( "{$this->prefix}/seo/og:title" );
-			do_action( "{$this->prefix}/seo/og:image" );
-			do_action( "{$this->prefix}/seo/og:type" );
-		}
-	}
-
-	/**
-	 * Better SEO: meta title.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function wp_title( $title, $sep="|" )
-	{
-		if ( ! $sep && false !== $sep ) {
-			$sep = "|";
-		}
-
-		$title = "$title $sep " . get_bloginfo('blogname');
-		if ( is_feed() ) {
-			return $title;
-		}
-
-		$content = $this->seo_title( $sep );
-
-		// Add the site name
-		if ( $content ) {
-			$title = $content;
-		}
-
-		return trim($title);
-	}
-
-	/**
-	 * Better SEO: meta title.
-	 *
-	 * @since	2.0.7
-	 * @return	void
-	 */
-	public function seo_title( $sep="|" )
-	{
-		if ( ',' != $sep ) { $sep = " $sep"; }
-		$content = '';
-
-		global $post, $paged, $page;
-
-		if ( is_404() )
-		{
-			$content = apply_filters( "{$this->prefix}/seo/404_title", "Not Found, Error 404" );
-		}
-		elseif ( is_author() )
-		{
-			$author = get_userdata( get_query_var('author') );
-			$content = apply_filters( "{$this->prefix}/seo/author_title", $author->display_name . "$sep " . get_bloginfo('blogname') );
-		}
-		elseif ( is_archive() )
-		{
-			$content = apply_filters( "{$this->prefix}/seo/archive_title", get_the_archive_title() . "$sep " . get_bloginfo('blogname') );
-		}
-		elseif ( is_home() )
-		{
-			$posts_page_id = get_option('page_for_posts');
-			$front_page_id = get_option('page_on_front');
-
-			// If pages are default with home being posts and a site meta exists
-			if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_title') ) {
-				$content = $meta;
-			// Look for a custom meta on a posts page
-			} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_title', true) ) {
-				$content = $meta;
-			// Look for a posts page title
-			} elseif ( $posts_page_id && $meta = get_the_title($posts_page_id) ) {
-				$content = "$meta$sep " . get_bloginfo('blogname');
-			// Use a default that can be filtered
-			} else {
-				$content = apply_filters( "{$this->prefix}/seo/home_title", get_bloginfo('blogname') );
-			}
-		}
-		else
-		{
-			// Look for a custom meta title and override post title
-			if ( ! empty($GLOBALS['post']->ID) )
-			{
-				if ( $meta_title = get_post_meta($GLOBALS['post']->ID, 'meta_title', true) ) {
-					$content = $meta_title;
-				} elseif ( $meta_title = get_the_title($GLOBALS['post']->ID) ) {
-					$content = "$meta_title$sep " . get_bloginfo('blogname');
-				}
-			}
-		}
-
-		// Add pagination
-		if ( $content && (1 < $GLOBALS['paged'] || 1 < $GLOBALS['page']) ) {
-			$content .= "$sep Page " . max( $GLOBALS['paged'], $GLOBALS['page'] );
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Update archive titles in HEAD
-	 * /
-	public 
-
-	/**
-	 * Better SEO: meta description.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_description()
-	{
-		$content = '';
-
-		if ( is_archive() )
-		{
-			$content = apply_filters( "{$this->prefix}/seo/archive_description", strip_tags( str_replace(array("\r","\n"), '', term_description()) ) );
-		}
-		elseif ( is_home() )
-		{
-			$posts_page_id = get_option('page_for_posts');
-			$front_page_id = get_option('page_on_front');
-
-			// If pages are default with home being posts and a site meta exists
-			if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_description') ) {
-				$content = $meta;
-			// Look for a custom meta on a posts page
-			} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_description', true) ) {
-				$content = $meta;
-			// Look for a posts page content
-			} elseif ( $posts_page_id && $meta = get_post_field('post_content', $posts_page_id) ) {
-				$content = ( apply_filters("{$this->prefix}/seo/default_description", false) ) ? wp_trim_words($meta, '30', '') : null;
-			}
-		}
-		else
-		{
-			if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_description', true) ) {
-				$content = $meta;
-			} elseif ( ! empty($GLOBALS['post']->ID) && $meta = get_post_field('post_content', $GLOBALS['post']->ID) ) {
-				$content = ( apply_filters("{$this->prefix}/seo/default_description", false) ) ? wp_trim_words($meta, '30', '') : null;
-			}
-		}
-
-		if ( $content ) {
-			printf( $this->settings['meta_fields']['description'] . "\n", $content );
-		}
-	}
-
-	/**
-	 * Better SEO: meta description.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_keywords()
-	{
-		$content = '';
-
-		if ( apply_filters( "{$this->prefix}/seo/add_keywords", false ) )
-		{
-			if ( is_home() )
-			{
-				$posts_page_id = get_option('page_for_posts');
-				$front_page_id = get_option('page_on_front');
-	
-				// If pages are default with home being posts and a site meta exists
-				if ( ! $posts_page_id && ! $front_page_id && $meta = get_option('options_meta_keywords') ) {
-					$content = $meta;
-				// Look for a custom meta on a posts page
-				} elseif ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_keywords', true) ) {
-					$content = $meta;
-				}
-			}
-			else
-			{
-				if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_keywords', true) ) {
-					$content = $meta;
-				}
-			}
-	
-			if ( $content ) {
-				printf( $this->settings['meta_fields']['keywords'] . "\n", $content );
-			}
-		}
-	}
-
-	/**
-	 * Better SEO: meta classification.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_classification()
-	{
-		if ( $meta = get_option('meta_classification') ) {
-			printf( $this->settings['meta_fields']['classification'] . "\n", $meta );
-		}
-	}
-
-	/**
-	 * Better SEO: site name.
-	 *
-	 * @since	1.0.1
-	 * @return	void
-	 */
-	public function meta_site_name()
-	{
-		$content = '';
-		if ( $meta = get_option('meta_title') ) {
-			$content = $meta;
-		} else {
-			$content = get_option('blogname');
-		}
-
-		if ( $content ) {
-			printf( $this->settings['meta_fields']['site_name'] . "\n", $content );
-		}
-	}
-
-	/**
-	 * Better SEO: open graph title.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_og_title()
-	{
-		$content = $this->seo_title( ',' );
-
-		if ( $content ) {
-			printf( $this->settings['meta_fields']['title'] . "\n", $content );
-		}
-	}
-
-	/**
-	 * Better SEO: open graph image.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_og_image()
-	{
-		$content = '';
-		if ( is_home() && $meta = get_option('meta_image') ) {
-			$content = $meta;
-		} elseif ( ! empty($GLOBALS['post']->ID) && $meta = apply_filters( "{$this->prefix}/seo/add_image_field", $GLOBALS['post']->ID ) ) {
-			$content = $meta;
-		} elseif ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_image', true) ) {
-			$content = $meta;
-		} elseif ( ! empty($GLOBALS['post']->ID) && $meta_array = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['post']->ID), 'full') ) {
-			if ( ! empty($meta_array[0]) ) {
-				$content = $meta_array[0];
-			}
-		}
-
-		if ( $content ) {
-			printf( $this->settings['meta_fields']['image'] . "\n", $content );
-		}
-	}
-
-	/**
-	 * Better SEO: open graph type.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_og_type()
-	{
-		$content = '';
-		if ( ! empty($GLOBALS['post']->ID) && $meta = get_post_meta($GLOBALS['post']->ID, 'meta_type', true) ) {
-			$content = $meta;
-		} elseif ( $meta = get_option('meta_type') ) {
-			$content = $meta;
-		}
-
-		if ( $content ) {
-			printf( $this->settings['meta_fields']['type'] . "\n", $content );
-		}
-	}
-
-	/**
-	 * Better SEO: open graph type.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function meta_permalink()
-	{
-		if ( is_home() )
-		{
-			$posts_page_id = get_option('page_for_posts');
-			// Look for a permalink on a posts page
-			if ( $posts_page_id && $meta = get_post_meta($posts_page_id, 'meta_title', true) ) {
-				echo $meta;
-			// Look for a posts page post permalink
-			} elseif ( $posts_page_id && $meta = get_the_title($posts_page_id) ) {
-				echo $meta;
-			// Else home url
-			} else {
-				echo home_url('/');
-			}
-		}
-		else
-		{
-			echo get_permalink();
-		}
-	}
-
-	/**
-	 * Image override returns false by default.
-	 *
-	 * @since	1.0.0
-	 * @return	void
-	 */
-	public function manual_image( $post_id )
-	{
-		if ( is_numeric($post_id) ) {
-			return false;
-		} else {
-			return $post_id;
-		}
-	}
-
-	/**
 	 * Add the meta box.
 	 *
 	 * @since	2.0.0
@@ -574,30 +320,38 @@ class Sewn_Seo
 			}
 		}
 
-		// Add sitemap if it is installed and set
-		if ( apply_filters( "{$this->prefix}/seo/add_sitemap", $this->settings['add_xml_sitemap'] ) && class_exists('Sewn_Xml_Sitemap') && $field = apply_filters( "{$this->prefix}/sitemap/exclude_field", '' ) ) {
-			$this->settings['field_groups'][0]['fields'][] = $field;
-		}
+		$fields = array();
 
-		foreach ( $this->settings['field_groups'][0]['fields'] as $key => &$field )
+		foreach ( $this->settings['field_groups'][0]['fields'] as $key => $field )
 		{
 			if ( empty($field) ) { continue; }
-
-			// Remove keywords or open graph image field unless asked for
-			if (
-				('meta_keywords' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_keywords", false )) || 
-				('meta_type' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_type", false )) || 
-				('meta_image' == $field['name'] && ! apply_filters( "{$this->prefix}/seo/add_image", false )) 
-			) {
-				unset($this->settings['field_groups'][0]['fields'][$key]);
-				continue;
-			}
 
 			// Add max length to instructions
 			if ( ! empty($field['maxlength']) ) {
 				$field['instructions'] = sprintf( $field['instructions'], $field['maxlength'] );
 			}
+
+			// Remove keywords or open graph image field unless asked for
+			if ( 'meta_keywords' == $field['name'] ) {
+				if ( apply_filters( "{$this->prefix}/seo/add_keywords", false ) ) {
+					$fields[] = $field;
+				}
+
+				// Add sitemap if it is installed and set
+				if ( apply_filters( "{$this->prefix}/seo/add_sitemap", $this->settings['add_xml_sitemap'] ) && $xml_field = apply_filters( "{$this->prefix}/sitemap/exclude_field", null ) ) {
+					$fields[] = $xml_field;
+				}
+
+				// Add sitemap if it is installed and set
+				if ( $social_fields = apply_filters( "{$this->prefix}/social/fields", [] ) ) {
+					$fields = array_merge( $fields, $social_fields );
+				}
+			} else {
+				$fields[] = $field;
+			}
 		}
+
+		$this->settings['field_groups'][0]['fields'] = $fields;
 
 		foreach ( $this->settings['field_groups'] as $field_group ) {
 			do_action( "{$this->prefix}/meta/register_field_group", $field_group );
@@ -607,7 +361,7 @@ class Sewn_Seo
 
 $$class_name = new $class_name;
 $$class_name->run();
-unset($class_name);
+unset($$class_name);
 
 function sewn_simplify_archive_title( $title )
 {

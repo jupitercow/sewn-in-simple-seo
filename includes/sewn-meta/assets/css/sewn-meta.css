@@ -1,14 +1,40 @@
-.sewn-hl:before, .sewn-hl:after, .sewn-bl:before, .sewn-bl:after, .sewn-cf:before, .sewn-cf:after {
+.select2-container {
+	width: 100%;
+}
+/* Horizontal List */
+.sewn-hl {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	display: block;
+	position: relative;
+}
+.sewn-hl > li {
+	float: left;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+.sewn-hl > li.sewn-fr {
+	float: right;
+}
+/* Horizontal List: Clearfix */
+.sewn-hl:before,
+.sewn-hl:after,
+.sewn-bl:before,
+.sewn-bl:after,
+.sewn-cf:before,
+.sewn-cf:after {
 	content: "";
 	display: block;
 	line-height: 0;
 }
-
-	.sewn-hl:after, .sewn-bl:after, .sewn-cf:after {
-		clear: both;
-	}
-
-
+.sewn-hl:after,
+.sewn-bl:after,
+.sewn-cf:after {
+	clear: both;
+}
+/* Block List */
 .sewn-bl {
 	padding: 0;
 	margin: 0;
@@ -16,15 +42,33 @@
 	display: block;
 	position: relative;
 }
+.sewn-bl > li {
+	display: block;
+	margin: 0;
+	padding: 0;
+	float: none;
+}
 
-	.sewn-bl > li {
-		display: block;
-		margin: 0;
-		padding: 0;
-		float: none;
+.sewn-field-tab {
+	display: none !important;
+}
+
+.sewn-postbox > .hndle > a {
+	border: 1px solid;
+	border-radius: 3px;
+	/*box-shadow: 0 1px 0 #006799;*/
+	cursor: pointer;
+	display: inline-block;
+	font-size: 13px;
+	font-weight: bold;
+	margin: 0 0 0 1.5em;
+	padding: 0 8px;
+	text-decoration: none;
+}
+	.sewn-postbox > .hndle > a.sewn-tab-active {
+		color: black;
+		cursor: default;
 	}
-
-
 
 .sewn-postbox > .inside, .sewn-fields {
 	margin: 0 !important;
@@ -97,36 +141,127 @@
 		margin: 0;
 	}
 
-	ul.sewn-radio-list,
-	ul.sewn-checkbox-list {
-		background: transparent !important;
+ul.sewn-radio-list,
+ul.sewn-checkbox-list {
+	background: transparent !important;
+	position: relative;
+	padding: 1px;
+	margin: 0;
+}
+
+	ul.sewn-radio-list li,
+	ul.sewn-checkbox-list li {
+		font-size: 13px;
+		line-height: 22px;
+		margin: 0;
 		position: relative;
-		padding: 1px;
+		word-wrap: break-word;
+	}
+
+	ul.sewn-hl.sewn-radio-list li,
+	ul.sewn-hl.sewn-checkbox-list li {
+		margin-right: 20px;
+		clear: none;
+	}
+
+	ul.sewn-radio-list li label,
+	ul.sewn-checkbox-list li label {
+		display: inline;
+		margin: 2px 0;
+	}
+
+	ul.sewn-radio-list li input,
+	ul.sewn-checkbox-list li input {
+		margin: -1px 4px 0 0;
+		vertical-align: middle;
+	}
+
+	/* attachment sidebar fix*/
+	ul.sewn-radio-list li span,
+	ul.sewn-checkbox-list li span {
+		float: none;
+	}
+
+	/* rtl */
+	html[dir="rtl"] ul.sewn-radio-list li input,
+	html[dir="rtl"] ul.sewn-checkbox-list li input {
+		margin-left: 4px;
+		margin-right: 0;
+		padding: 0;
 		margin: 0;
 	}
 
-		ul.sewn-radio-list li,
-		ul.sewn-checkbox-list li {
-			font-size: 13px;
-			line-height: 22px;
-			margin: 0;
-			position: relative;
-			word-wrap: break-word;
-		}
-
-			ul.sewn-radio-list li label,
-			ul.sewn-checkbox-list li label {
-				display: inline;
-				margin: 2px 0;
-			}
-
-			ul.sewn-radio-list li input,
-			ul.sewn-checkbox-list li input {
-				margin: -1px 4px 0 0;
-				width: auto !important;
-				vertical-align: middle;
-			}
-
 .sewn-meta-extra {
 	font-size: .75em;
+}
+
+
+
+.sewn-fields > .sewn-tab-wrap {
+	background: #F9F9F9;
+	margin: 0;
+}
+.sewn-tab-wrap:first-child {
+	margin: 0;
+}
+.sewn-tab-wrap {
+	clear: both;
+	margin: 0 0 20px;
+}
+.sewn-fields > .sewn-tab-wrap:first-child .sewn-tab-group {
+	border-top-width: 0;
+}
+.sewn-fields > .sewn-tab-wrap .sewn-tab-group {
+	padding-top: 10px;
+	border-top: #DFDFDF solid 1px;
+	border-bottom: #DFDFDF solid 1px;
+}
+.sewn-tab-group {
+	border-bottom: #ccc solid 1px;
+	padding: 0 5px 0 10px;
+	position: relative;
+	margin-bottom: -1px;
+	z-index: 1;
+}
+
+.sewn-tab-group li {
+	margin: 0 5px 0 0;
+}
+.sewn-tab-group:after {
+	clear: both;
+	content: '';
+	display: block;
+	line-height: 0;
+}
+
+.sewn-fields > .sewn-tab-wrap .sewn-tab-group li.sewn-tab-active a {
+	background: #FFFFFF;
+}
+.sewn-tab-group li.sewn-tab-active a {
+	background: #F1F1F1;
+	color: #000;
+	border-color: #CCCCCC;
+	border-bottom-color: #F7F7F7;
+	padding-bottom: 7px;
+	margin-bottom: -1px;
+	z-index: 1;
+	position: relative;
+}
+.sewn-tab-group li a {
+	padding: 6px 10px;
+	display: block;
+	color: #555555;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 24px;
+	border: #ccc solid 1px;
+	border-bottom: 0 none;
+	text-decoration: none;
+	background: #F1F1F1;
+	border-radius: 3px 3px 0 0;
+	transition: none;
+}
+
+.sewn-hidden-tab {
+	display: none !important;
 }

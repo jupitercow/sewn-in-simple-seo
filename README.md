@@ -1,6 +1,6 @@
 # Sewn In Simple SEO
 
-A nice and simple way to create XML Sitemaps when a page or post is saved. Very simple, no cruft or extra features you won't use.
+A very simple SEO interface without caricatures and cruft. New improved social support.
 
 ## Control what post types are added
 
@@ -62,48 +62,12 @@ add_filter( 'sewn/seo/default_description', '__return_true' );
 ```
 
 
-## Open Graph Images
-
-This plugin includes some support for open graph images via the featured image field. Coming soon is a specific upload field.
-
-
-## Automated Header Info
-
-Sewn In Simple SEO adds the necessary info to the header, but if you would like to be more deliberate, you can turn that off and the items you want back in manually.
-
-Turn off the automated fields:
-
-```php
-add_filter( 'sewn/seo/automate_head', '__return_false' );
-```
-
-The actions that currently get automated in (along with the meta title):
-
-```php
-do_action( 'sewn/seo/description' );
-do_action( 'sewn/seo/keywords' );
-do_action( 'sewn/seo/classification' );
-do_action( 'sewn/seo/site_name' );
-do_action( 'sewn/seo/og:title' );
-do_action( 'sewn/seo/og:image' );
-do_action( 'sewn/seo/og:type' );
-```
-
-= More complete / complex archive titles =
-
-Currently the default archive titles are set to be simplified. Generally this will lead to better SEO titles. Where as a standard WordPress archive title might be "Category: Category Name" or "Author: Author Name", these would be simplified to "Category Name" and "Author Name". If you prefer the original version, you can turn off the simplification:
-
-```php
-remove_filter( 'sewn/seo/archive_title', 'sewn_simplify_archive_title' );
-```
-
 = Other filters =
 
 ```php
 // Custom home or blog page title
 add_filter( 'sewn/seo/home_title', 'custom_seo_home_title' );
-function custom_seo_home_title( $title )
-{
+function custom_seo_home_title( $title ) {
 	return 'My blog page title';
 }
 ```
@@ -111,8 +75,7 @@ function custom_seo_home_title( $title )
 ```php
 // Customize 404 titles
 add_filter( 'sewn/seo/404_title', 'custom_seo_404_title' );
-function custom_seo_404_title( $title )
-{
+function custom_seo_404_title( $title ) {
 	return 'These are not the pages you are looking for';
 }
 `
@@ -120,8 +83,7 @@ function custom_seo_404_title( $title )
 ```php
 // Customize archive titles
 add_filter( 'sewn/seo/archive_title', 'custom_seo_archive_title' );
-function custom_seo_archive_title( $title )
-{
+function custom_seo_archive_title( $title ) {
 	// Customize the title
 }
 ```
@@ -129,8 +91,7 @@ function custom_seo_archive_title( $title )
 ```php
 // Custom archive descriptions
 add_filter( 'sewn/seo/archive_description', 'custom_seo_archive_description' );
-function custom_seo_archive_description( $description )
-{
+function custom_seo_archive_description( $description ) {
 	// Custom description here
 }
 ```

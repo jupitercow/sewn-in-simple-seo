@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Meta Fields
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-meta/
  * Description:       Just a basic interface for adding custom meta boxes and fields to plugins and themes.
- * Version:           1.0.1
+ * Version:           1.0.3
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -65,7 +65,7 @@ class Sewn_Meta
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '1.0.0';
+		$this->version     = '1.0.3';
 	}
 
 	/**
@@ -140,7 +140,8 @@ class Sewn_Meta
 	{
 		if ( ! in_array($hook, array('post.php','post-new.php')) ) { return; }
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/js/sewn-meta.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name . '_select2', plugin_dir_url( __FILE__ ) . 'assets/js/select2.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/js/sewn-meta.js', array( 'jquery', $this->plugin_name . '_select2' ), $this->version, false );
 	}
 
 	/**
@@ -152,6 +153,7 @@ class Sewn_Meta
 	{
 		if ( ! in_array($hook, array('post.php','post-new.php')) ) { return; }
 
+		wp_enqueue_style( $this->plugin_name . '_select2', plugin_dir_url( __FILE__ ) . 'assets/css/select2.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'assets/css/sewn-meta.css', array(), $this->version, 'all' );
 	}
 }

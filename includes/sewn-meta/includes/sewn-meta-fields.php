@@ -5,7 +5,7 @@
  *
  * A collection of fields to use in the admin. Creates a simple action to output a field.
  *
- * @since      1.0.0
+ * @since      1.0.1
  * @package    Sewn_Meta
  * @subpackage Sewn_Meta/includes
  * @author     Jake Snyder <jake@jcow.com>
@@ -301,14 +301,14 @@ class Sewn_Meta_Field
 
 		// prepend
 		if ( $field['prepend'] ) {
-			$field['class'] .= ' acf-is-prepended';
-			$e .= '<div class="acf-input-prepend">' . $field['prepend'] . '</div>';
+			$field['class'] .= ' sewn-is-prepended';
+			$e .= '<div class="sewn-input-prepend">' . $field['prepend'] . '</div>';
 		}
 
 		// append
 		if ( $field['append'] ) {
-			$field['class'] .= ' acf-is-appended';
-			$e .= '<div class="acf-input-append">' . $field['append'] . '</div>';
+			$field['class'] .= ' sewn-is-appended';
+			$e .= '<div class="sewn-input-append">' . $field['append'] . '</div>';
 		}
 
 		// populate atts
@@ -327,7 +327,7 @@ class Sewn_Meta_Field
 		}
 
 		// render
-		$e .= '<div class="acf-input-wrap">';
+		$e .= '<div class="sewn-input-wrap">';
 		$e .= '<input ' . $this->esc_attrs( $atts ) . ' />';
 		$e .= '</div>';
 
@@ -454,6 +454,7 @@ class Sewn_Meta_Field
 
 		// add empty value (allows '' to be selected)
 		if ( empty($field['value']) ) {
+			$field['value'] = [];
 			$field['value'][''] = '';
 		}
 
@@ -468,6 +469,10 @@ class Sewn_Meta_Field
 			'class'				=> $field['class'],
 			'name'				=> $field['name'],
 			'data-multiple'		=> $field['multiple'],
+			'data-ui'			=> $field['ui'],
+			'data-placeholder'	=> $field['placeholder'],
+			'data-allow_null'	=> $field['allow_null'],
+			'data-sewn'			=> 1,
 		);
 
 		// multiple
@@ -519,7 +524,7 @@ class Sewn_Meta_Field
 		}
 
 		// html
-		$e .= '<select ' . acf_esc_attr( $atts ) . '>';	
+		$e .= '<select ' . $this->esc_attrs( $atts ) . '>';	
 
 		// construct html
 		if ( ! empty($els) )
@@ -591,8 +596,8 @@ class Sewn_Meta_Field
 		) );
 
 		// class
-		$field['class'] .= ' acf-checkbox-list';
-		$field['class'] .= ( ! empty($field['layout']) && 'horizontal' == $field['layout'] ) ? ' acf-hl' : ' acf-bl';
+		$field['class'] .= ' sewn-checkbox-list';
+		$field['class'] .= ( ! empty($field['layout']) && 'horizontal' == $field['layout'] ) ? ' sewn-hl' : ' sewn-bl';
 
 		// e
 		$e = '<ul ' . $this->esc_attrs(array('class' => $field['class'])) . '>';
@@ -699,50 +704,135 @@ class Sewn_Meta_Field
 	}
 
 	/**
-	 * Update: true_false
-	 *
-	 * @since	1.0.0
-	 * @return	HTML
-	 */
-	public function update_true_false( $value )
-	{
-		//if 
-	}
-
-	
-
-
-	/**
 	 * Field: radio
 	 *
-	 * @since	1.0.0
+	 * @since	1.0.2
 	 * @return	HTML
 	 */
 	public function radio( $field )
 	{
-		
+		$field = wp_parse_args( $field, array(
+			'layout'		=> 'vertical',
+			'choices'		=> array(),
+			'default_value'	=> '',
+		) );
+
+		// class
+		$field['class'] .= ' sewn-radio-list';
+		$field['class'] .= ( ! empty($field['layout']) && 'horizontal' == $field['layout'] ) ? ' sewn-hl' : ' sewn-bl';
+
+		// e
+		$e = '<ul ' . $this->esc_attrs(array('class' => $field['class'])) . '>';
+
+		// foreach choices
+		if ( ! empty($field['choices']) )
+		{
+			$i = 0;
+			foreach( $field['choices'] as $value => $label )
+			{
+				$i++;
+
+				// vars
+				$atts = array(
+					'type'	=> 'radio',
+					'id'	=> $field['id'], 
+					'name'	=> $field['name'],
+					'value'	=> $value,
+				);
+
+				if ( $value == $field['value'] ) {
+					$atts['checked'] = 'checked';
+				}
+
+				if ( isset($field['disabled']) && in_array($value, $field['disabled']) ) {
+					$atts['disabled'] = 'disabled';
+				}
+
+				// each input ID is generated with the $key, however, the first input must not use $key so that it matches the field's label for attribute
+				if ( $i > 1 ) {
+					$atts['id'] .= '-' . $value;
+				}
+
+				$e .= '<li><label><input ' . $this->esc_attrs( $atts ) . ' />' . $label . '</label></li>';
+			}
+		}
+
+		$e .= '</ul>';
+
+		// return
+		return $e;
 	}
 
 	/**
 	 * Field: file upload
 	 *
-	 * @since	1.0.0
+	 * @since	1.0.2
 	 * @return	HTML
 	 */
 	public function file( $field )
 	{
-		
+		wp_enqueue_media();
+
+		$field = wp_parse_args( $field, array(
+			'default_value'	=> '',
+			'placeholder'	=> '',
+			'readonly'		=> 0,
+			'disabled'		=> 0,
+			'size'          => '36',
+			'button_label'  => __( 'Upload File', $this->plugin_name ),
+		) );
+
+		// vars
+		$o = array( 'id', 'class', 'name', 'size', 'value', 'placeholder' );
+		$s = array( 'readonly', 'disabled' );
+		$e = '';
+
+		// populate atts
+		$atts = array();
+		foreach ( $o as $k ) {
+			if ( $field[$k] ) {
+				$atts[ $k ] = $field[ $k ];
+			}
+		}
+
+		// special atts
+		foreach( $s as $k ) {
+			if ( $field[ $k ] ) {
+				$atts[ $k ] = $k;
+			}
+		}
+
+		$o['type'] = 'text';
+
+		// render
+		$e .= '<div class="sewn-file-wrap">';
+		$e .= '<input ' . $this->esc_attrs( $atts ) . '>';
+		$e .= '<input class="sewn-upload-button sewn-button button" data-target="' . $field['id'] . '" type="button" value="' . esc_attr( $field['button_label'] ) . '">';
+		$e .= '</div>';
+
+		return $e;
 	}
 
 	/**
-	 * Field: image upload
+	 * Field: tab
 	 *
-	 * @since	1.0.0
+	 * @since	1.0.1
 	 * @return	HTML
 	 */
-	public function image( $field )
+	public function tab( $field )
 	{
-		
+		$field = wp_parse_args( $field, array(
+			'data-placement' => 'left',
+		));
+
+		$atts = array(
+			'class'		     => 'sewn-tab',
+			'data-placement' => $field['placement'],
+		);
+
+		$e = '<div ' . $this->esc_attrs( $atts ) . '>' . esc_html( $field['label'] ) . '</div>';
+
+		return $e;
 	}
 }
 
