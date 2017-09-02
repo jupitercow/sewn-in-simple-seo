@@ -127,15 +127,21 @@ Works with the [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-s
 
 == Changelog ==
 
-*   Initial split off of the SEO plugin.
+= 2.1.3 - 2017-09-02 =
 
-= 1.0.0 - 2016-01-29 =
+*   Removed array short syntax, updated meta style.
 
-*   Updated sewn meta and readme.
+= 2.1.2 - 2017-08-30 =
+
+*   Some cleanup, bug fixes and launch to the repo.
+
+= 2.1.1 - 2017-02-29 =
+
+*   Added better social support, added connections to new social optimization plugin.
 
 = 2.0.8 - 2015-10-15 =
 
-*   Descriptions are no longer auto created. Only crafted descriptions are used. Can be turned back on using this filter: 'sewn/seo/default_description'
+*   Descriptions are no longer auto created. Only crafted descriptions are used. Can be turned back on using this filter: 'sewn/seo/default_description'.
 
 = 2.0.7 - 2015-07-27 =
 
@@ -174,6 +180,12 @@ Works with the [Sewn In XML Sitemap](https://wordpress.org/plugins/sewn-in-xml-s
 
 
 == Upgrade Notice ==
+
+= 2.1.3 =
+Removed array short syntax, so that we can now support WordPress PHP requirements (5.2.4).
+
+= 2.0.7 =
+Fixed the archive/taxonomy titles. Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
 
 = 2.0.7 =
 Fixed the archive/taxonomy titles. Changed default post types used from only 'post' and 'page' to ALL public post types except "attachment". This is a cleaner approach, but may require customization.
