@@ -454,7 +454,7 @@ class Sewn_Meta_Field
 
 		// add empty value (allows '' to be selected)
 		if ( empty($field['value']) ) {
-			$field['value'] = [];
+			$field['value'] = array();
 			$field['value'][''] = '';
 		}
 

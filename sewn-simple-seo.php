@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Simple SEO
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-simple-seo/
  * Description:       Adds a very simple, clean interface for controlling SEO items for a website.
- * Version:           2.1.2
+ * Version:           2.1.3
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -74,7 +74,7 @@ class Sewn_Seo
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '2.1.2';
+		$this->version     = '2.1.3';
 		$this->frontend    = array();
 		$this->settings    = array(
 			'add_xml_sitemap'  => false,
@@ -343,7 +343,7 @@ class Sewn_Seo
 				}
 
 				// Add sitemap if it is installed and set
-				if ( $social_fields = apply_filters( "{$this->prefix}/social/fields", [] ) ) {
+				if ( $social_fields = apply_filters( "{$this->prefix}/social/fields", array() ) ) {
 					$fields = array_merge( $fields, $social_fields );
 				}
 			} else {

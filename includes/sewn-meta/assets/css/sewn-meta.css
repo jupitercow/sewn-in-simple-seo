@@ -1,5 +1,5 @@
 .select2-container {
-	width: 100%;
+	width: 100% !important;
 }
 /* Horizontal List */
 .sewn-hl {

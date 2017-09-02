@@ -21,12 +21,12 @@ class Sewn_Seo_Frontend_Seo extends Sewn_Seo_Frontend
 	{
 		parent::__construct();
 
-		$this->settings['meta_fields'] = [
+		$this->settings['meta_fields'] = array(
 			'description'    => '<meta name="description" content="%s">',
 			'keywords'       => '<meta name="keywords" content="%s">',
 			'robots'         => '<meta name="robots" content="%s">',
 			'canonical'      => '<link rel="canonical" href="%s">',
-		];
+		);
 		$this->settings = apply_filters( "{$this->prefix}/seo/frontend/seo", $this->settings );
 	}
 
@@ -38,7 +38,7 @@ class Sewn_Seo_Frontend_Seo extends Sewn_Seo_Frontend
 	 */
 	public function init()
 	{
-		add_action( "{$this->prefix}/seo/head",                [ $this, 'wp_head' ], 1 );
+		add_action( "{$this->prefix}/seo/head",                array( $this, 'wp_head' ), 1 );
 
 		/* Remove actions to replace */
 		remove_action( 'wp_head', 'rel_canonical' );
@@ -48,15 +48,15 @@ class Sewn_Seo_Frontend_Seo extends Sewn_Seo_Frontend
 		remove_action( 'wp_head', 'noindex', 1 );
 
 		/* WordPress head and standard meta */
-		add_filter( 'pre_get_document_title',                  [ $this, 'meta_title' ], 15 );
-		add_filter( 'wp_title',                                [ $this, 'meta_title' ], 15, 3 );
-		add_filter( 'loginout',                                [ $this, 'nofollow_link' ] );
-		add_filter( 'register',                                [ $this, 'nofollow_link' ] );
+		add_filter( 'pre_get_document_title',                  array( $this, 'meta_title' ), 15 );
+		add_filter( 'wp_title',                                array( $this, 'meta_title' ), 15, 3 );
+		add_filter( 'loginout',                                array( $this, 'nofollow_link' ) );
+		add_filter( 'register',                                array( $this, 'nofollow_link' ) );
 
-		add_action( "{$this->prefix}/seo/description",         [ $this, 'meta_description' ] );
-		add_action( "{$this->prefix}/seo/keywords",            [ $this, 'meta_keywords' ] );
-		add_action( "{$this->prefix}/seo/robots",              [ $this, 'meta_robots' ] );
-		add_action( "{$this->prefix}/seo/canonical",           [ $this, 'meta_canonical' ] );
+		add_action( "{$this->prefix}/seo/description",         array( $this, 'meta_description' ) );
+		add_action( "{$this->prefix}/seo/keywords",            array( $this, 'meta_keywords' ) );
+		add_action( "{$this->prefix}/seo/robots",              array( $this, 'meta_robots' ) );
+		add_action( "{$this->prefix}/seo/canonical",           array( $this, 'meta_canonical' ) );
 	}
 
 	/**

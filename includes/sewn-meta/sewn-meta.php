@@ -9,7 +9,7 @@
  * Plugin Name:       Sewn In Meta Fields
  * Plugin URI:        https://wordpress.org/plugins/sewn-in-meta/
  * Description:       Just a basic interface for adding custom meta boxes and fields to plugins and themes.
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Jupitercow
  * Author URI:        http://Jupitercow.com/
  * Contributor:       Jake Snyder
@@ -65,7 +65,7 @@ class Sewn_Meta
 	{
 		$this->prefix      = 'sewn';
 		$this->plugin_name = strtolower(__CLASS__);
-		$this->version     = '1.0.3';
+		$this->version     = '1.0.4';
 	}
 
 	/**
